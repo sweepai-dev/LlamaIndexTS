@@ -4,6 +4,7 @@ import {
   MetadataMode,
   NodeWithEmbedding,
 } from "../../Node";
+import { SupabaseVectorStore } from "../../storage/vectorStore/SupabaseVectorStore";
 import { BaseQueryEngine, RetrieverQueryEngine } from "../../QueryEngine";
 import { VectorIndexRetriever } from "./VectorIndexRetriever";
 import {
@@ -44,13 +45,13 @@ export class VectorStoreIndex extends BaseIndex<IndexDict> {
    * @param options
    * @returns
    */
-  static async init(options: VectorIndexOptions): Promise<VectorStoreIndex> {
+  static async init(options: VectorIndexOptions, supabaseVectorStore: SupabaseVectorStore): Promise<VectorStoreIndex> {
     const storageContext =
       options.storageContext ?? (await storageContextFromDefaults({}));
     const serviceContext =
       options.serviceContext ?? serviceContextFromDefaults({});
     const docStore = storageContext.docStore;
-    const vectorStore = storageContext.vectorStore;
+    const vectorStore = supabaseVectorStore || storageContext.vectorStore;
     const indexStore = storageContext.indexStore;
 
     // Setup IndexStruct from storage
