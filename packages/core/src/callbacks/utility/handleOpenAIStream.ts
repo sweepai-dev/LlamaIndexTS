@@ -5,6 +5,20 @@ import { APIResponse } from "openai/core";
 import { Stream } from "openai/streaming";
 import { MessageType } from "../../llm/LLM";
 
+/**
+ * Handles the stream of responses from OpenAI.
+ * @param response - The stream of responses from OpenAI.
+ * @param onLLMStream - The callback to call with each response.
+ * @param parentEvent - The parent event, if any.
+ * @returns A promise that resolves to an object containing the cumulative message and the role of the last message.
+ * 
+ * Example:
+ * 
+ * ```typescript
+ * const response = await openai.chatCompletion({ model: "text-davinci-002", messages: [{ role: "system", content: "You are a helpful assistant." }, { role: "user", content: "Who won the world series in 2020?" }] });
+ * handleOpenAIStream({ response, onLLMStream: (data) => console.log(data), parentEvent: new Event() }).then(({ message, role }) => console.log(`Message: ${message}, Role: ${role}`));
+ * ```
+ */
 export async function handleOpenAIStream({
   response,
   onLLMStream,
