@@ -5,6 +5,13 @@ import { APIResponse } from "openai/core";
 import { Stream } from "openai/streaming";
 import { MessageType } from "../../llm/LLM";
 
+/**
+ * Handles the stream of responses from OpenAI.
+ * @param response - The stream of responses from OpenAI.
+ * @param onLLMStream - The callback to call with each response.
+ * @param parentEvent - The parent event for the stream.
+ * @returns A promise that resolves to the final message and role.
+ */
 export async function handleOpenAIStream({
   response,
   onLLMStream,
