@@ -2,6 +2,12 @@ import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
+/**
+ * Splits the text of a document into smaller parts.
+ * @param document - The document to split.
+ * @param textSplitter - The text splitter to use.
+ * @returns An array of text splits.
+ */
 export function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
@@ -12,6 +18,14 @@ export function getTextSplitsFromDocument(
   return splits;
 }
 
+/**
+ * Creates nodes from a document.
+ * @param document - The document to create nodes from.
+ * @param textSplitter - The text splitter to use.
+ * @param includeMetadata - Whether to include metadata in the nodes.
+ * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
+ * @returns An array of nodes.
+ */
 export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
@@ -46,15 +60,21 @@ export function getNodesFromDocument(
 
   return nodes;
 }
+
 /**
- * A node parser generates TextNodes from Documents
+ * Interface for classes that can create nodes from documents.
  */
 export interface NodeParser {
+  /**
+   * Creates nodes from an array of documents.
+   * @param documents - The documents to create nodes from.
+   * @returns An array of nodes.
+   */
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
 /**
- * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+ * Class that implements the NodeParser interface using a simple text splitter.
  */
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
