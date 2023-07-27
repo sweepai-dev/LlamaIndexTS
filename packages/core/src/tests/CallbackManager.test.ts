@@ -214,4 +214,22 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       retrieveCallbackData[0].event.parentId
     );
   });
-});
+
+  test("For VectorStoreIndex w/ initialization, retrieval, and building", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.init(
+      { serviceContext },
+    );
+    const nodes = await vectorStoreIndex.getNodeEmbeddingResults(
+      [document],
+      serviceContext
+    );
+    const index = await vectorStoreIndex.buildIndexFromNodes(
+      nodes,
+      serviceContext,
+      vectorStore,
+      docStore
+    );
+    expect(index).toBeDefined();
+    expect(nodes).toBeDefined();
+  });
+}
