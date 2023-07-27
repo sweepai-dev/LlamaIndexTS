@@ -15,18 +15,24 @@ export class SupabaseVectorStore implements VectorStore {
   }
 
   add(embeddingResults: NodeWithEmbedding[]): string[] {
-    // Implement the add method using the Supabase client
+    // Use the insert method of the Supabase client to add the embedding results to the database
+    this.supabaseClient.from('embeddings').insert(embeddingResults);
+    return [];
   }
 
   delete(refDocId: string, deleteKwargs?: any): void {
-    // Implement the delete method using the Supabase client
+    // Use the delete method of the Supabase client to delete the specified document from the database
+    this.supabaseClient.from('embeddings').delete().match({ refDocId });
   }
 
   query(query: VectorStoreQuery, kwargs?: any): VectorStoreQueryResult {
-    // Implement the query method using the Supabase client
+    // Use the select method of the Supabase client to perform a query on the database and return the result
+    const result = this.supabaseClient.from('embeddings').select().eq('query', query);
+    return result;
   }
 
   persist(persistPath: string, fs?: GenericFileSystem): void {
-    // Implement the persist method using the Supabase client
+    // Use the upsert method of the Supabase client to persist the current state of the SupabaseVectorStore to the database
+    this.supabaseClient.from('embeddings').upsert(this.data);
   }
 }
