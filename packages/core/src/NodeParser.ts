@@ -2,6 +2,12 @@ import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
+/**
+ * Splits the text of a document into segments.
+ * @param document - The document to split.
+ * @param textSplitter - The text splitter to use.
+ * @returns An array of text splits.
+ */
 export function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
@@ -12,6 +18,14 @@ export function getTextSplitsFromDocument(
   return splits;
 }
 
+/**
+ * Generates an array of nodes from a document.
+ * @param document - The document to generate nodes from.
+ * @param textSplitter - The text splitter to use.
+ * @param includeMetadata - Whether to include metadata in the nodes.
+ * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
+ * @returns An array of nodes.
+ */
 export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
@@ -46,21 +60,33 @@ export function getNodesFromDocument(
 
   return nodes;
 }
+
 /**
- * A node parser generates TextNodes from Documents
+ * A node parser generates TextNodes from Documents.
+ * @interface
  */
 export interface NodeParser {
+  /**
+   * Generates an array of nodes from an array of documents.
+   * @param documents - The documents to generate nodes from.
+   * @returns An array of nodes.
+   */
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
 /**
- * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+ * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter.
+ * @class
  */
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
   includeMetadata: boolean;
   includePrevNextRel: boolean;
 
+  /**
+   * Constructs a SimpleNodeParser.
+   * @param init - An optional initialization object.
+   */
   constructor(init?: {
     textSplitter?: SentenceSplitter;
     includeMetadata?: boolean;
@@ -79,6 +105,11 @@ export class SimpleNodeParser implements NodeParser {
     this.includePrevNextRel = init?.includePrevNextRel ?? true;
   }
 
+  /**
+   * Creates a SimpleNodeParser with default values.
+   * @param init - An optional initialization object.
+   * @returns A SimpleNodeParser.
+   */
   static fromDefaults(init?: {
     chunkSize?: number;
     chunkOverlap?: number;
@@ -89,8 +120,9 @@ export class SimpleNodeParser implements NodeParser {
   }
 
   /**
-   * Generate Node objects from documents
-   * @param documents
+   * Generates an array of nodes from an array of documents.
+   * @param documents - The documents to generate nodes from.
+   * @returns An array of nodes.
    */
   getNodesFromDocuments(documents: Document[]) {
     return documents
