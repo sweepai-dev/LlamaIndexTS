@@ -5,6 +5,20 @@ import { APIResponse } from "openai/core";
 import { Stream } from "openai/streaming";
 import { MessageType } from "../../llm/LLM";
 
+/**
+ * Handles an OpenAI stream.
+ * 
+ * @param {Object} params - The parameters for the function.
+ * @param {APIResponse<Stream<ChatCompletionChunk>>} params.response - The response from the OpenAI API.
+ * @param {(data: StreamCallbackResponse) => void} params.onLLMStream - The callback function to call with the stream data.
+ * @param {Event} [params.parentEvent] - The parent event, if any.
+ * @returns {Promise<{ message: string; role: MessageType }>} - A promise that resolves to an object with the message and role from the stream.
+ * 
+ * @example
+ * const response = await openai.ChatCompletion.create({ model: "text-davinci-002", messages: [{ role: "system", content: "You are a helpful assistant." }, { role: "user", content: "Who won the world series in 2020?" }] });
+ * const onLLMStream = (data) => console.log(data);
+ * const result = await handleOpenAIStream({ response, onLLMStream });
+ */
 export async function handleOpenAIStream({
   response,
   onLLMStream,
