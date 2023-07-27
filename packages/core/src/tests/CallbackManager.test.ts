@@ -55,13 +55,76 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
     });
   });
 
-  beforeEach(() => {
-    streamCallbackData = [];
-    retrieveCallbackData = [];
-  });
-
-  afterAll(() => {
-    jest.clearAllMocks();
+  test("For VectorStoreIndex methods", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
+      [document],
+      { serviceContext }
+    );
+    const queryEngine = vectorStoreIndex.asQueryEngine();
+    const query = "What is the author's name?";
+    const response = await queryEngine.query(query);
+    expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+    expect(streamCallbackData).toEqual([
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 0,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 1,
+        token: {
+          id: "id",
+          object: "object",
+          created: 1,
+          model: "model",
+          choices: expect.any(Array),
+        },
+      },
+      {
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "llmPredict",
+          tags: ["final"],
+        },
+        index: 2,
+        isDone: true,
+      },
+    ]);
+    expect(retrieveCallbackData).toEqual([
+      {
+        query: query,
+        nodes: expect.any(Array),
+        event: {
+          id: expect.any(String),
+          parentId: expect.any(String),
+          type: "retrieve",
+          tags: ["final"],
+        },
+      },
+    ]);
+    // both retrieval and streaming should have
+    // the same parent event
+    expect(streamCallbackData[0].event.parentId).toBe(
+      retrieveCallbackData[0].event.parentId
+    );
   });
 
   test("For VectorStoreIndex w/ a SimpleResponseBuilder", async () => {
@@ -214,4 +277,4 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       retrieveCallbackData[0].event.parentId
     );
   });
-});
+}
