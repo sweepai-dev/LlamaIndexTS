@@ -2,6 +2,12 @@ import { Document, NodeRelationship, TextNode } from "./Node";
 import { SentenceSplitter } from "./TextSplitter";
 import { DEFAULT_CHUNK_OVERLAP, DEFAULT_CHUNK_SIZE } from "./constants";
 
+/**
+ * Splits the text of a document into smaller parts.
+ * @param document - The document to split.
+ * @param textSplitter - The text splitter to use.
+ * @returns An array of text splits.
+ */
 export function getTextSplitsFromDocument(
   document: Document,
   textSplitter: SentenceSplitter
@@ -12,6 +18,14 @@ export function getTextSplitsFromDocument(
   return splits;
 }
 
+/**
+ * Generates text nodes from a document.
+ * @param document - The document to generate nodes from.
+ * @param textSplitter - The text splitter to use.
+ * @param includeMetadata - Whether to include metadata in the nodes.
+ * @param includePrevNextRel - Whether to include previous and next relationships in the nodes.
+ * @returns An array of text nodes.
+ */
 export function getNodesFromDocument(
   document: Document,
   textSplitter: SentenceSplitter,
@@ -46,15 +60,24 @@ export function getNodesFromDocument(
 
   return nodes;
 }
+
 /**
- * A node parser generates TextNodes from Documents
+ * A node parser generates TextNodes from Documents.
+ * @method getNodesFromDocuments - Generates text nodes from an array of documents.
  */
 export interface NodeParser {
   getNodesFromDocuments(documents: Document[]): TextNode[];
 }
 
 /**
- * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter
+ * SimpleNodeParser is the default NodeParser. It splits documents into TextNodes using a splitter, by default SentenceSplitter.
+ * @property textSplitter - The text splitter to use.
+ * @property includeMetadata - Whether to include metadata in the nodes.
+ * @property includePrevNextRel - Whether to include previous and next relationships in the nodes.
+ * @method getNodesFromDocuments - Generates text nodes from an array of documents.
+ * @example
+ * const parser = new SimpleNodeParser();
+ * const nodes = parser.getNodesFromDocuments(documents);
  */
 export class SimpleNodeParser implements NodeParser {
   textSplitter: SentenceSplitter;
