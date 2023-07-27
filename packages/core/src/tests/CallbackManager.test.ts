@@ -28,6 +28,11 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
   let retrieveCallbackData: RetrievalCallbackResponse[] = [];
   let document: Document;
 
+  beforeEach(() => {
+    streamCallbackData = [];
+    retrieveCallbackData = [];
+  });
+
   beforeAll(async () => {
     document = new Document({ text: "Author: My name is Paul Graham" });
     const callbackManager = new CallbackManager({
@@ -277,4 +282,8 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       retrieveCallbackData[0].event.parentId
     );
   });
-}
+
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+})
