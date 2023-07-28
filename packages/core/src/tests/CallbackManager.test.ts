@@ -52,8 +52,37 @@ describe("CallbackManager: onLLMStream and onRetrieve", () => {
       callbackManager,
       llm: languageModel,
       embedModel,
-    });
   });
+
+  test("For VectorStoreIndex methods", async () => {
+    const vectorStoreIndex = await VectorStoreIndex.fromDocuments(
+      [document],
+      { serviceContext }
+    );
+    const queryEngine = vectorStoreIndex.asQueryEngine();
+    const query = "What is the author's name?";
+    const response = await queryEngine.query(query);
+    expect(response.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+
+    const retriever = vectorStoreIndex.asRetriever();
+    const retrievalResponse = await retriever.retrieve(query);
+    expect(retrievalResponse.toString()).toBe("MOCK_TOKEN_1-MOCK_TOKEN_2");
+
+    const nodes = await VectorStoreIndex.getNodeEmbeddingResults(
+      [document],
+      serviceContext
+    );
+    expect(nodes).toEqual(expect.any(Array));
+
+    const index = await VectorStoreIndex.buildIndexFromNodes(
+      nodes,
+      serviceContext,
+      vectorStoreIndex.vectorStore,
+      vectorStoreIndex.docStore
+    );
+    expect(index).toEqual(expect.any(Object));
+  });
+});
 
   beforeEach(() => {
     streamCallbackData = [];
